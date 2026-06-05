@@ -1,34 +1,63 @@
 import 'package:flutter/material.dart';
-import 'live_match_screen.dart';
+import 'home_screen.dart';
 import 'profile_screen.dart';
+import 'registration_screen.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+class MainNavigationScreen extends StatefulWidget {
+  final String userName;
+  final String userPhone;
+
+  const MainNavigationScreen({super.key, required this.userName, required this.userPhone});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<MainNavigationScreen> createState() => _MainNavigationScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
-  int index = 0;
-
-  final pages = const [
-    LiveMatchScreen(isDoubles: false, tossWinner: "Player 1", selectedCoin: "White"),
-    ProfileScreen(),
-  ];
+class _MainNavigationScreenState extends State<MainNavigationScreen> {
+  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: pages[index],
+    final List<Widget> pages = [
+      const HomeScreen(),
 
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: index,
-        onTap: (i) => setState(() => index = i),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        ],
+      const RegistrationScreen(),
+
+      ProfileScreen(userName: widget.userName, userPhone: widget.userPhone),
+    ];
+
+    return Scaffold(
+      body: pages[currentIndex],
+
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          boxShadow: [BoxShadow(blurRadius: 15, color: Colors.black12)],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: currentIndex,
+          type: BottomNavigationBarType.fixed,
+
+          backgroundColor: Colors.white,
+
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.grey,
+
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+
+          onTap: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
+
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: "Home"),
+
+            BottomNavigationBarItem(icon: Icon(Icons.app_registration_rounded), label: "Register"),
+
+            BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: "Profile"),
+          ],
+        ),
       ),
     );
   }
